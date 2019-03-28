@@ -1,0 +1,19 @@
+import sys
+from collections import Counter
+
+print(sys.argv)
+if len(sys.argv) < 2:
+    print("usage:\n./wordCount.py [filename]")
+    exit(1)
+
+words = []
+
+    with open(sys.argv[1], 'r') as f:
+        for line in f:
+            for word in line.split():
+                word = word.replace(".", "").replace(",", "")
+                words.add(word)
+count = Counter(words).most_common()
+
+for i in range(len(count)):
+    print("{0:>16} : {1}".format(count[i][0], count[i][1]))
