@@ -1,0 +1,11 @@
+import subprocess
+
+def onePing(ip):
+    response = subprocess.run("ping -c 1 -w 1 " + ip, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    return not response.returncode
+
+baseIp = "10.0.2."
+for i in range(100):
+    ip = baseIp + str(i)
+    response = onePing(ip)
+    print("{0} : {1}".format{ip, response})
