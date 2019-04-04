@@ -1,0 +1,19 @@
+#!/usr/bin/env python3
+#!/bin/bash
+import os
+import subprocess as sp
+
+def ping(ip):
+    command = sp.check_output(["ping", "-c", "1", ip])
+    return command
+
+input = input("Give an IP address range \n")
+
+for ip in range(1, 101):
+    adres = input + "." + str(ip)
+    try:
+        ping2 = ping(adres)
+        print("Host is online: " + adres)
+        print(os.system("host " + adres))
+    except sp.CalledProcessError as error:
+        print("Host is offline: " + adres)
