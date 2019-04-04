@@ -1,0 +1,27 @@
+import os
+
+totalFile = 0
+totalDir = 0
+totalByte = 0
+
+for dirpath, dirs, files in os.walk("."):
+
+    totalDir += len(dirs)
+
+    path = dirpath.split('/')
+    filecount = len(files)
+    totalFile += filecount
+
+    print('|', (len(path)) * '---' + "D " + '[', os.path.basename(dirpath), ']' + "  Number of files: " + str(filecount))
+
+    for names in files:
+
+        pathfiles = dirpath + "\\" + names
+        size = os.path.getsize(pathfiles)
+        totalByte += size
+
+        print('|', len(path) * '---', "F " + names + "  " + str(size) + " bytes\n")
+
+print("Total Files: " + str(totalFile))
+print("Total Directories: " + str(totalDir))
+print("Total Size: " + str(totalByte) + " bytes")
