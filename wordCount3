@@ -1,0 +1,55 @@
+import sys
+
+filename = str(sys.argv[1])
+forbiddenCharacters = ['.',',','?','!',':',';']
+
+def wordCount():
+    numWords = 0
+    wordsFreq = {}
+    wordsNoCaps = {}
+    wordsWithCaps = {}
+    with open(filename, 'r') as file:
+
+        for line in file:
+            wordsList = line.split()
+            numWords += len(wordsList)
+
+            for i in range(0,len(wordsList)):
+                currentWord = wordsList[i]
+
+                for x in range(0,len(forbiddenCharacters)):
+                    currentWord = currentWord.replace(forbiddenCharacters[x],'')
+
+                if currentWord.islower():
+                    if currentWord.upper() in wordsNoCaps:
+                        wordsNoCaps[currentWord.upper()] += 1
+                    else:
+                        wordsNoCaps[currentWord.upper()] = 1
+                        wordsWithCaps[currentWord.upper()] = 0
+                else:
+                    if currentWord.upper() in wordsWithCaps:
+                        wordsWithCaps[currentWord.upper()] += 1
+                    else:
+                        wordsWithCaps[currentWord.upper()] = 1
+                        wordsNoCaps[currentWord.upper()] = 0
+
+
+                currentWord = currentWord.upper()
+
+                if len(wordsFreq) > 0:
+                    if currentWord in wordsFreq:
+                        wordsFreq[currentWord] += 1
+                    else:
+                        wordsFreq[currentWord] = 1
+                else:
+                    wordsFreq[currentWord] = 1
+
+    print("\nWord count: %i\n\nFrequency per word: [total | without caps | with caps]\n" % (numWords))
+    for key, value in sorted(wordsFreq.items(), key=lambda kv: kv[1]):
+        print("{:>15}:{:>5}{:>5}{:>5}".format(key, value, wordsNoCaps[key], wordsWithCaps[key]))
+
+
+try:
+    wordCount()
+except:
+    print("\nThe input was invalid, try again.")
