@@ -4,16 +4,10 @@ __version__ = '1.2'
 __author__ = 'Camille Molenaar'
 __opgave__ = 'w1o1.py'
 
-# Print "hello world" uitbreiding
 def combine(arg1, arg2):
-    """ Concatenates arg1 and arg2 with an space to seperate the args """
-    sentence = arg1.strip() + " " + arg2.strip()        # Write your code
-    return sentence.strip() # A string
+    sentence = arg1.strip() + " " + arg2.strip()
+    return sentence.strip()
 
-# Controleer op het programma goed werkt.
-# Maak zelf nog meer tests.
-# De variable __name__ wordt door python gezet,
-# als aangeroepen met puthon3 w1o2.py staat deze op '__main__'
 if __name__ == '__main__':
      print(combine("hello ", " world"))
      if combine("hello ", " world") != "hello world":
