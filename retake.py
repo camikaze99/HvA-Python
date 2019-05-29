@@ -1,49 +1,34 @@
 #!/usr/bin/python
-import hva_pcap
-import hva_pckt
+# (c) 2019 Camille Molenaar IC102 f.h.schippers@hva.nl
+import hva_pcap as pcap
+import hva_pckt as pckt
 
-connections = {}
-connections[0] = "Hello"
-connections["test"] = "Value"
-connections["test2"] = "Value2"
-print(connections[0], "\n")
-print(connections)
+# Opens the pcap file and uses the pcap library to turn it into usable data
+rdr = pcap.open_offline('xsupport.pcap')
 
+count = 0
 
-"""
-connections.append()
-connections.delete()
+# This function prints the nTimestamp, source IP address,
+# destination IP address, source IP address
+def printNoAck(time, sAdd, dAdd, sPo, dPo):
 
-https://www.pythonforbeginners.com/dictionary/how-to-use-dictionaries-in-python/
-
-https://www.tutorialspoint.com/python/python_dictionary.htm
-
-Tuple values cannot be changed
-mytuple = ("one", 1, 'x')
-print(mytuple)
-
-print connection[Value]
-
-Tuple index in dict
-
-for
-    if condition:
-        continue
-    if condition:
-        break
-
-for condition:
-    if pckt.type!= "TCP":
-        continue
-        if pckt.flags not in ("syn", "ack")
-            continue
+    print("\nTimestamp: \t\t\t", time, "\nSource IP Address: \t\t" , sAdd,
+    "\nDestination IP Address: \t", dAdd, "\nSource Port: \t\t\t", sPo,
+    "\nDestination Port: \t\t", dPo)
 
 
-myReq = (pcap.sip, pcap.dport ect)
-mySynData[myReq] = 1
-print(mySynData)
+for hdr, data in rdr:
 
+    eth = pckt.Eth.decode(data)
+    if eth is None: continue
+    ip = pckt.Ip.decode(eth.pl)
+    if eth is None: continue
+    tcp = pckt.Tcp.decode(ip.pl)
+    if tcp is None: continue
 
-if (flags = "ack")
-    delete mySynData[(...)]
-"""
+    if tcp.ack == 0:
+        printNoAck(hdr.ts, ip.saddr, ip.daddr, tcp.sport, tcp.dport)
+        count = count + 1
+
+print("\nSuspicious packets: \t\t", count)
+#    break
