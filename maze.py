@@ -35,39 +35,31 @@ def read():
 
     return width, height, finish, tiles
 
+# Creates a "matrix" and sets the x and y (width, height) values to False so they are marked as unvisited
+# These coordinates and attached Boolean will be used in the function solve()
 def createMatrix(width, height):
     matrix = []
     for i in range(width):
         matrix.append([])
-        for _ in range(height):
+        for j in range(height):
             matrix[i].append(False)
     return matrix
 
+# Calculates what the coordinates are from the center of the maze
 def getValidCenter(meta_tuple):
     width, height, finish, tiles = meta_tuple
-    x = width / 2
-    y = height / 2
-
-    if (round(x), round(y)) in tiles:
-        return round(x), round(y)
-    if (int(x), int(y)) in tiles:
-        return int(x), int(y)
-    if (int(x), round(y)) in tiles:
-        return int(x), round(y)
-    if (round(x), int(y)) in tiles:
-        return round(x), int(y)
-
-meta_tuple = read()
-visited = createMatrix(meta_tuple[0], meta_tuple[1])
-center = getValidCenter(meta_tuple)
+    x = width / 2 + 1
+    y = height / 2 + 1
+    return int(x), int(y)
 
 def solve(meta_tuple, visited, position, path):
-    # Finish is reached
-    if position == meta_tuple[2]:
+    # Instead of having to use meta_tuple[0-2]
+    width, height, finish, tiles = meta_tuple
+    # If the finish is reached print the path and add/append the coordinates of the finish
+    if position == finish:
+        path.append(finish)
         print(path)
         return True
-
-    tiles = meta_tuple[3]
 
     # Current coordinates
     x, y = position
@@ -78,11 +70,16 @@ def solve(meta_tuple, visited, position, path):
 
     solved = False
 
-    # Check all directions (up, down, left, right)
+    # Check all directions (up, down, left, right) and marks the visited coordinates as True
     # Right
     if (x+1, y) in tiles and not visited[x+1][y]:
         visited[x+1][y] = True
         position = (x+1, y)
+        solved = solve(meta_tuple, visited, position, path)
+    # Up
+    if (x, y-1) in tiles and not visited[x][y-1]:
+        visited[x][y-1] = True
+        position = (x, y-1)
         solved = solve(meta_tuple, visited, position, path)
     # Left
     if (x-1, y) in tiles and not visited[x-1][y]:
@@ -94,11 +91,6 @@ def solve(meta_tuple, visited, position, path):
         visited[x][y+1] = True
         position = (x, y+1)
         solved = solve(meta_tuple, visited, position, path)
-    # Up
-    if (x, y-1) in tiles and not visited[x][y-1]:
-        visited[x][y-1] = True
-        position = (x, y-1)
-        solved = solve(meta_tuple, visited, position, path)
 
     # Remove the visited position from the path
     if not solved:
@@ -106,5 +98,11 @@ def solve(meta_tuple, visited, position, path):
 
     return solved
 
-
+meta_tuple = read()
+# Instead of having to use meta_tuple[0-2]
+width, height, finish, tiles = meta_tuple
+visited = createMatrix(width, height)
+center = getValidCenter(meta_tuple)
+#print("Start:", center)
+#print("Finish", finish)
 solve(meta_tuple, visited, center, [])
